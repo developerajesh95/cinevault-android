@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Cine Vault</string>
+    <string name="title_activity_home_screen">HomeScreen</string>
+    <string name="title_activity_download_screen">DownloadScreen</string>
+</resources>
