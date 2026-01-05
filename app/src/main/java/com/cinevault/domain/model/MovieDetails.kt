@@ -1,0 +1,31 @@
+package com.cinevault.domain.model
+
+data class MovieDetails(
+    val adult: Boolean,
+    val backdropPath: String,
+    val budget: Long,
+    val genres: List<Genres>,
+    val homepage: String,
+    val id: Long,
+    val imdbId: String,
+    val originalLanguage: String,
+    val originalTitle: String,
+    val overview: String,
+    val popularity: Double,
+    val posterPath: String,
+    val originCountry: List<String>,
+    val belongsToCollection: BelongsToCollection?,
+    val productionCompanies: List<ProductionCompany>,
+    val productionCountries: List<ProductionCountry>,
+    val releaseDate: String,
+    val revenue: Long,
+    val runtime: Long,
+    val spokenLanguages: List<SpokenLanguage>,
+    val status: String,
+    val tagline: String,
+    val title: String,
+    val video: Boolean,
+    val voteAverage: Double,
+    val voteCount: Long,
+    var isBookmarked: Boolean = false
+)
