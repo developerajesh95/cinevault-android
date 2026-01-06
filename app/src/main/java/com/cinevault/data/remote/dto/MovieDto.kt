@@ -14,13 +14,13 @@ data class MovieDto(
     val overview: String,
 
     @SerializedName("poster_path")
-    val posterPath: String?,
+    val posterPath: String,
 
     @SerializedName("backdrop_path")
-    val backdropPath: String?,
+    val backdropPath: String,
 
     @SerializedName("release_date")
-    val releaseDate: String?,
+    val releaseDate: String,
 
     @SerializedName("vote_average")
     val rating: Double,
@@ -72,16 +72,7 @@ fun MovieDto.toMovie(): Movie {
         releaseDate = releaseDate,
         rating = rating,
         mediaType = mediaType,
-        genreIds = genreIds,
-        adult = adult,
         popularity = popularity,
-        video = video,
-        voteCount = voteCount,
-        originalLanguage = originalLanguage,
-        originalTitle = originalTitle,
-        originCountry = originCountry,
-        originalName = originalName,
         name = name,
-        firstAirDate = firstAirDate
     )
 }

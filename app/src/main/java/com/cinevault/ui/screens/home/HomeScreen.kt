@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -29,7 +30,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.cinevault.domain.model.Movie
-import com.cinevault.domain.model.MovieResponse
 import com.cinevault.ui.screens.MovieItem
 import com.cinevault.ui.screens.SeeMoreItem
 import com.cinevault.ui.screens.ShowErrorMessage
@@ -100,8 +100,8 @@ fun HomeScreen(
 @SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun HomeContent(
-    trending: MovieResponse?,
-    nowPlaying: MovieResponse?,
+    trending: List<Movie>,
+    nowPlaying: List<Movie>,
     onMovieClick: (Int) -> Unit,
     onBookmarkClick: (Movie) -> Unit,
     onSeeMoreTrending: () -> Unit,
@@ -120,18 +120,14 @@ fun HomeContent(
             verticalAlignment = CenterVertically
         ) {
 
-            items(4) { currentIndex ->
-                val currentMovie = trending?.results[currentIndex]
-
-                currentMovie?.let {
-                    MovieItem(
-                        it,
-                        onClick = { onMovieClick(currentMovie.id) },
-                        onBookmarkClick = { movie ->
-                            onBookmarkClick(movie)
-                        }
-                    )
-                }
+            items(trending.take(4)) { currentMovie ->
+                MovieItem(
+                    currentMovie,
+                    onClick = { onMovieClick(currentMovie.id) },
+                    onBookmarkClick = { movie ->
+                        onBookmarkClick(movie)
+                    }
+                )
             }
 
             item {
@@ -148,17 +144,14 @@ fun HomeContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = CenterVertically
         ) {
-            nowPlaying?.results?.let {
-                items(4) { currentIndex ->
-                    val currentMovie = nowPlaying.results[currentIndex]
-                    MovieItem(
-                        currentMovie,
-                        onClick = { onMovieClick(currentMovie.id) },
-                        onBookmarkClick = { movie ->
-                            onBookmarkClick(movie)
-                        }
-                    )
-                }
+            items(nowPlaying.take(4)) { currentMovie ->
+                MovieItem(
+                    currentMovie,
+                    onClick = { onMovieClick(currentMovie.id) },
+                    onBookmarkClick = { movie ->
+                        onBookmarkClick(movie)
+                    }
+                )
             }
 
             item {

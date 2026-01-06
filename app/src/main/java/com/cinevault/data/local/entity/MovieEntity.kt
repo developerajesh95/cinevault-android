@@ -2,6 +2,7 @@ package com.cinevault.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.cinevault.domain.model.MovieDetails
 
 @Entity(tableName = "movies")
 data class MovieEntity(
@@ -11,24 +12,32 @@ data class MovieEntity(
     val title: String,
     val overview: String,
 
-    val posterPath: String?,
-    val backdropPath: String?,
+    val posterPath: String,
+    val backdropPath: String,
 
-    val releaseDate: String?,
+    val releaseDate: String,
     val rating: Double,
 
     val mediaType: String,
 
-    val popularity: Double,
+    val isTrending: Boolean = false,
+    val isNowPlaying: Boolean = false,
 
-    var isBookmarked: Int,
+    var isBookmarked: Boolean = false,
 
-    val movieCategory: MovieCategory
+    val lastUpdated: Long
 )
 
-enum class MovieCategory {
-    TRENDING,
-    NOW_PLAYING,
-    BOOKMARKED
+fun MovieEntity.toMovieDetails(): MovieDetails {
+    return MovieDetails(
+        id = id.toLong(),
+        title = title,
+        overview = overview,
+        posterPath = posterPath,
+        backdropPath = backdropPath,
+        releaseDate = releaseDate,
+        voteAverage = rating,
+        isBookmarked = isBookmarked,
+        originalTitle = title
+    )
 }
-

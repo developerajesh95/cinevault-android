@@ -24,7 +24,7 @@ object DatabaseModule {
             context,
             CineVaultDatabase::class.java,
             "cinevault_db"
-        ).fallbackToDestructiveMigration().build()
+        ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
     }
 
     @Provides

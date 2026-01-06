@@ -1,31 +1,44 @@
 package com.cinevault.domain.model
 
+import com.cinevault.data.local.entity.MovieEntity
+
 data class MovieDetails(
-    val adult: Boolean,
     val backdropPath: String,
-    val budget: Long,
-    val genres: List<Genres>,
-    val homepage: String,
     val id: Long,
-    val imdbId: String,
-    val originalLanguage: String,
     val originalTitle: String,
     val overview: String,
-    val popularity: Double,
     val posterPath: String,
-    val originCountry: List<String>,
-    val belongsToCollection: BelongsToCollection?,
-    val productionCompanies: List<ProductionCompany>,
-    val productionCountries: List<ProductionCountry>,
     val releaseDate: String,
-    val revenue: Long,
-    val runtime: Long,
-    val spokenLanguages: List<SpokenLanguage>,
-    val status: String,
-    val tagline: String,
-    val title: String,
-    val video: Boolean,
     val voteAverage: Double,
-    val voteCount: Long,
+    val title: String,
     var isBookmarked: Boolean = false
+)
+
+fun MovieDetails.toEntity(): MovieEntity {
+    return MovieEntity(
+        id = id.toInt(),
+        title = title,
+        overview = overview,
+        posterPath = posterPath,
+        backdropPath = backdropPath,
+        releaseDate = releaseDate,
+        rating = voteAverage,
+        mediaType = "movie",
+        isBookmarked = isBookmarked,
+        lastUpdated = System.currentTimeMillis()
+    )
+}
+
+fun MovieDetails.toMovie() = Movie(
+    id = id.toInt(),
+    title = title,
+    overview = overview,
+    posterPath = posterPath,
+    backdropPath = backdropPath,
+    releaseDate = releaseDate,
+    rating = voteAverage,
+    mediaType = "movie",
+    popularity = voteAverage,
+    name = title,
+    isBookmarked = isBookmarked
 )

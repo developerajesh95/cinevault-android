@@ -26,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -35,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.cinevault.core.constant.ApiConstants
 import com.cinevault.data.local.entity.MovieEntity
+import com.cinevault.ui.screens.ShowErrorMessage
 import com.cinevault.ui.screens.ShowProgressIndicator
 import com.cinevault.utils.AppLogger
 import com.cinevault.utils.Helpers
@@ -45,28 +47,36 @@ fun BookMarkScreen(
     onMovieClick: (Int) -> Unit,
     viewModel: BookmarkViewModel = hiltViewModel()
 ) {
-    val state = viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsState()
 
     when {
-        state.value.isLoading -> {
+        state.isLoading -> {
             ShowProgressIndicator()
         }
 
-        state.value.result?.isEmpty() == true -> {
+        state.error != null -> {
+            ShowErrorMessage(
+                message = state.error,
+                onRetry = { /* No retry needed – DB driven */ }
+            )
+        }
+
+        state.isEmpty -> {
             EmptyState()
         }
 
         else -> {
-            state.value.result?.let {
-                BookmarkList(
-                    movies = it,
-                    onMovieClick = onMovieClick,
-                    onRemoveClick = { movieId -> viewModel.removeBookmark(movieId) }
-                )
-            }
+            BookmarkList(
+                movies = state.movies,
+                onMovieClick = onMovieClick,
+                onRemoveClick = { movieId ->
+                    viewModel.removeBookmark(movieId)
+                }
+            )
         }
     }
 }
+
 
 
 @Composable

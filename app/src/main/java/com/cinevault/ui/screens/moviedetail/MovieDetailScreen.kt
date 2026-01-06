@@ -47,7 +47,7 @@ fun MovieDetailScreen(
 ) {
 
     LaunchedEffect(movieId) {
-        viewModel.getMovie(movieId)
+        viewModel.load(movieId)
     }
 
     val state = viewModel.uiState.collectAsState()
@@ -70,7 +70,7 @@ fun MovieDetailScreen(
         else -> {
             val movie = state.value.response
             if (movie != null) {
-                MovieContent(movie = movie, onBookmarkClick = {})
+                MovieContent(movie = movie, onBookmarkClick = { viewModel.toggleBookmark(movie) })
             }
         }
     }

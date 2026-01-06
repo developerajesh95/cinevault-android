@@ -1,11 +1,11 @@
 package com.cinevault.ui.screens.home
 
-import com.cinevault.domain.model.MovieResponse
+import com.cinevault.domain.model.Movie
 
 data class HomeUiState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val isBookmarking: Boolean = false,
-    val trendingMovies: MovieResponse? = null,
-    val nowPlayingMovies: MovieResponse? = null,
+    val trendingMovies: List<Movie> = emptyList(),
+    val nowPlayingMovies: List<Movie> = emptyList(),
     val error: String? = null
 )

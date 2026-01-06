@@ -11,18 +11,9 @@ fun MovieEntity.toDomain(): Movie {
         posterPath = posterPath,
         backdropPath = backdropPath,
         releaseDate = releaseDate,
-        rating = rating,
+        popularity = rating,
         mediaType = mediaType,
-        genreIds = emptyList(),
-        adult = false,
-        popularity = popularity,
-        video = false,
-        voteCount = 0,
-        originalLanguage = "",
-        originalTitle = "",
-        originCountry = emptyList(),
-        originalName = "",
+        rating = rating,
         name = "",
-        firstAirDate = ""
     )
 }

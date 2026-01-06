@@ -145,20 +145,15 @@ fun CineVaultApp() {
                     val viewModel: MovieDetailViewModel = hiltViewModel()
                     MovieDetailScreen(
                         movieId = movieId,
-                        onRetry = { viewModel.getMovie(movieId) }
+                        onRetry = { viewModel.load(movieId) }
                     )
-                }
-                composable(Routes.BOOKMARKS) {
-                    BookMarkScreen(onMovieClick = { movieId ->
-                        navController.navigate(Routes.details(movieId))
-                    })
                 }
 
                 composable(Routes.TRENDING) {
                     // Get the existing HomeViewModel to reuse the already loaded data
                     val viewModel: HomeViewModel = hiltViewModel()
                     val state by viewModel.uiState.collectAsState()
-                    val movies = state.trendingMovies?.results ?: emptyList()
+                    val movies = state.trendingMovies
                     MovieGridScreen(
                         movies = movies,
                         onMovieClick = { id -> navController.navigate(Routes.details(id)) },
@@ -171,9 +166,9 @@ fun CineVaultApp() {
                 composable(Routes.NOW_PLAYING) {
                     val viewModel: HomeViewModel = hiltViewModel()
                     val state by viewModel.uiState.collectAsState()
-                    val movies = state.trendingMovies?.results ?: emptyList()
+                    val movies = state.trendingMovies
                     MovieGridScreen(
-                        movies = state.nowPlayingMovies?.results ?: emptyList(),
+                        movies = state.nowPlayingMovies,
                         onMovieClick = { id -> navController.navigate(Routes.details(id)) },
                         onBookmarkClick = { id ->
                             viewModel.bookmarkMovie(movies.find { it.id == id }!!)

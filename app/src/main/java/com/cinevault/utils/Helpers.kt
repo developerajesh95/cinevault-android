@@ -20,19 +20,10 @@ object Helpers {
                 overview = "",
                 rating = 8.6,
                 releaseDate = "2014-11-07",
-                backdropPath = null,
+                backdropPath = "/back.jpg",
                 mediaType = "movie",
-                genreIds = emptyList(),
-                adult = false,
                 popularity = 0.0,
-                video = false,
-                voteCount = 0,
-                originalLanguage = "en",
-                originalTitle = "Interstellar",
-                originCountry = emptyList(),
-                originalName = "",
                 name = "",
-                firstAirDate = ""
             )
         )
     )

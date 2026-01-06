@@ -8,10 +8,9 @@ import com.cinevault.data.local.entity.MovieEntity
 
 @Database(
     entities = [MovieEntity::class],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
-@TypeConverters(Converters::class)
 abstract class CineVaultDatabase: RoomDatabase() {
     abstract fun movieDao(): MovieDao
 }

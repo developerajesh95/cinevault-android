@@ -4,6 +4,7 @@ import com.cinevault.data.local.entity.MovieEntity
 
 data class BookmarkUiState(
     val isLoading: Boolean = false,
-    val result: List<MovieEntity>? = null,
+    val movies: List<MovieEntity> = emptyList(),
+    val isEmpty: Boolean = false,
     val error: String? = null
 )
