@@ -30,10 +30,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.cinevault.R
 import com.cinevault.core.constant.ApiConstants
 import com.cinevault.data.local.entity.MovieEntity
 import com.cinevault.ui.screens.ShowErrorMessage
@@ -129,7 +131,10 @@ fun BookmarkItem(
                 modifier = Modifier
                     .width(80.dp)
                     .height(120.dp),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(R.drawable.ic_placeholder),
+                error = painterResource(R.drawable.ic_placeholder),
+                fallback = painterResource(R.drawable.ic_placeholder)
             )
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -161,7 +166,7 @@ fun BookmarkItem(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                val releaseDate = Helpers.formatDate(movie.releaseDate.toString())
+                val releaseDate = Helpers.formatDate(movie.releaseDate)
                 Text(
                     text = "Release Date: $releaseDate",
                     style = MaterialTheme.typography.bodySmall,

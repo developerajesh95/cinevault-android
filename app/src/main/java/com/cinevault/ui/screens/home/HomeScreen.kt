@@ -1,6 +1,7 @@
 package com.cinevault.ui.screens.home
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,25 +17,40 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.cinevault.domain.model.Movie
+import com.cinevault.ui.screens.MovieGridScreen
 import com.cinevault.ui.screens.MovieItem
 import com.cinevault.ui.screens.SeeMoreItem
 import com.cinevault.ui.screens.ShowErrorMessage
 import com.cinevault.ui.screens.ShowProgressIndicator
+import com.cinevault.utils.AppLogger
+import kotlinx.coroutines.FlowPreview
 
+@OptIn(FlowPreview::class)
 @Composable
 fun HomeScreen(
     onMovieClick: (Int) -> Unit,
@@ -44,9 +60,11 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
+    val searchResults = viewModel.searchResults.collectAsLazyPagingItems()
+    var query by remember { mutableStateOf("") }
+
 
     Box(modifier = Modifier.fillMaxSize()) {
-
         when {
             state.isLoading -> {
                 ShowProgressIndicator()
@@ -57,16 +75,41 @@ fun HomeScreen(
             }
 
             else -> {
-                HomeContent(
-                    trending = state.trendingMovies,
-                    nowPlaying = state.nowPlayingMovies,
-                    onMovieClick = onMovieClick,
-                    onBookmarkClick = { movie ->
-                        viewModel.bookmarkMovie(movie)
-                    },
-                    onSeeMoreTrending = { onSeeMoreTrending() },
-                    onSeeMoreNowPlaying = { onSeeMoreNowPlaying() }
-                )
+                BackHandler(enabled = query.isNotBlank()) {
+                    query = ""
+                    viewModel.onSearchQueryChange("")
+                }
+
+                Column(modifier = Modifier.fillMaxSize()) {
+                    HomeSearchBar(
+                        query = query,
+                        onQueryChange = {
+                            query = it
+                            viewModel.onSearchQueryChange(it)
+                        }
+                    )
+
+                    if (query.isNotBlank()) {
+                        SearchContent (
+                            pagingItems = searchResults,
+                            onMovieClick = onMovieClick,
+                            onBookmarkClick = { movie ->
+                                viewModel.bookmarkMovie(movie)
+                            }
+                        )
+                    } else {
+                        HomeContent(
+                            trending = state.trendingMovies,
+                            nowPlaying = state.nowPlayingMovies,
+                            onMovieClick = onMovieClick,
+                            onBookmarkClick = { movie ->
+                                viewModel.bookmarkMovie(movie)
+                            },
+                            onSeeMoreTrending = { onSeeMoreTrending() },
+                            onSeeMoreNowPlaying = { onSeeMoreNowPlaying() }
+                        )
+                    }
+                }
             }
         }
 
@@ -157,6 +200,51 @@ fun HomeContent(
             item {
                 SeeMoreItem(onClick = onSeeMoreNowPlaying)
             }
+        }
+    }
+}
+
+@Composable
+fun HomeSearchBar(
+    query: String,
+    onQueryChange: (String) -> Unit
+) {
+    TextField(
+        value = query,
+        onValueChange = onQueryChange,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        placeholder = { Text("Search movies...") },
+        singleLine = true,
+        leadingIcon = {
+            Icon(Icons.Default.Search, contentDescription = "Search")
+        }
+    )
+}
+
+
+@Composable
+fun SearchContent(
+    pagingItems: LazyPagingItems<Movie>,
+    onMovieClick: (Int) -> Unit,
+    onBookmarkClick: (Movie) -> Unit
+) {
+    when {
+        pagingItems.loadState.refresh is LoadState.Loading -> {
+            ShowProgressIndicator()
+        }
+
+        pagingItems.itemCount == 0 -> {
+            AppLogger.showToast(LocalContext.current, "No results found")
+        }
+
+        else -> {
+            MovieGridScreen(
+                movies = pagingItems,
+                onMovieClick = onMovieClick,
+                onBookmarkClick = onBookmarkClick
+            )
         }
     }
 }

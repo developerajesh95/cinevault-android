@@ -21,7 +21,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -33,6 +32,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.cinevault.navigation.Routes
 import com.cinevault.ui.screens.MovieGridScreen
 import com.cinevault.ui.screens.bookmark.BookMarkScreen
@@ -152,26 +152,24 @@ fun CineVaultApp() {
                 composable(Routes.TRENDING) {
                     // Get the existing HomeViewModel to reuse the already loaded data
                     val viewModel: HomeViewModel = hiltViewModel()
-                    val state by viewModel.uiState.collectAsState()
-                    val movies = state.trendingMovies
+                    val movies = viewModel.trendingMovies.collectAsLazyPagingItems()
                     MovieGridScreen(
                         movies = movies,
                         onMovieClick = { id -> navController.navigate(Routes.details(id)) },
-                        onBookmarkClick = { id ->
-                            viewModel.bookmarkMovie(movies.find { it.id == id }!!)
+                        onBookmarkClick = { movie ->
+                            viewModel.bookmarkMovie(movie)
                         }
                     )
                 }
 
                 composable(Routes.NOW_PLAYING) {
                     val viewModel: HomeViewModel = hiltViewModel()
-                    val state by viewModel.uiState.collectAsState()
-                    val movies = state.trendingMovies
+                    val movies = viewModel.nowPlayingMovies.collectAsLazyPagingItems()
                     MovieGridScreen(
-                        movies = state.nowPlayingMovies,
+                        movies = movies,
                         onMovieClick = { id -> navController.navigate(Routes.details(id)) },
-                        onBookmarkClick = { id ->
-                            viewModel.bookmarkMovie(movies.find { it.id == id }!!)
+                        onBookmarkClick = { movie ->
+                            viewModel.bookmarkMovie(movie)
                         }
                     )
                 }
