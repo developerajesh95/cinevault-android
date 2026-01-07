@@ -14,10 +14,10 @@ data class MovieDto(
     val overview: String,
 
     @SerializedName("poster_path")
-    val posterPath: String,
+    val posterPath: String?,
 
     @SerializedName("backdrop_path")
-    val backdropPath: String,
+    val backdropPath: String?,
 
     @SerializedName("release_date")
     val releaseDate: String,
@@ -67,8 +67,8 @@ fun MovieDto.toMovie(): Movie {
         id = id,
         title = title,
         overview = overview,
-        posterPath = posterPath,
-        backdropPath = backdropPath,
+        posterPath = posterPath.toString(),
+        backdropPath = backdropPath.toString(),
         releaseDate = releaseDate,
         rating = rating,
         mediaType = mediaType,

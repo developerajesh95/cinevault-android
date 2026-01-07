@@ -8,7 +8,7 @@ import com.cinevault.data.local.entity.MovieEntity
 
 @Database(
     entities = [MovieEntity::class],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 abstract class CineVaultDatabase: RoomDatabase() {

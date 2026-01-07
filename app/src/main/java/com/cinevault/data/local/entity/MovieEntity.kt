@@ -23,6 +23,9 @@ data class MovieEntity(
     val isTrending: Boolean = false,
     val isNowPlaying: Boolean = false,
 
+    val trendingPage: Int = 0,
+    val nowPlayingPage: Int = 0,
+
     var isBookmarked: Boolean = false,
 
     val lastUpdated: Long
