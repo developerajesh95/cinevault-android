@@ -14,8 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -35,10 +35,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import coil.compose.AsyncImage
 import com.cinevault.R
 import com.cinevault.core.constant.ApiConstants
@@ -64,7 +67,10 @@ fun MovieItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(R.drawable.ic_placeholder),
+                error = painterResource(R.drawable.ic_placeholder),
+                fallback = painterResource(R.drawable.ic_placeholder)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -203,23 +209,51 @@ fun SeeMoreItem(onClick: () -> Unit) {
 
 @Composable
 fun MovieGridScreen(
-    movies: List<Movie>,
+    movies: LazyPagingItems<Movie>,
     onMovieClick: (Int) -> Unit,
-    onBookmarkClick: (Int) -> Unit
+    onBookmarkClick: (Movie) -> Unit
 ) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.fillMaxSize()
-    ) {
-        items(movies) { movie ->
-            MovieItem(
-                movie = movie,
-                onClick = { onMovieClick(movie.id) },
-                onBookmarkClick = { onBookmarkClick(movie.id) }
-            )
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.fillMaxSize()
+        ) {
+            items(movies.itemCount) { index ->
+                val movie = movies[index]
+                if (movie != null) {
+                    MovieItem(
+                        movie = movie,
+                        onClick = { onMovieClick(movie.id) },
+                        onBookmarkClick = { onBookmarkClick(movie) }
+                    )
+                }
+            }
+
+            // Loading state at bottom
+            when (movies.loadState.append) {
+                is LoadState.Loading -> {
+                    item(span = { GridItemSpan(2) }) {
+                        ShowProgressIndicator()
+                    }
+                }
+
+                is LoadState.Error -> {
+                    val error = (movies.loadState.append as LoadState.Error).error
+                    item(span = { GridItemSpan(2) }) {
+                        ShowErrorMessage(error.message) {}
+                    }
+                }
+
+                else -> {}
+            }
+        }
+
+        // Initial loading state
+        if (movies.loadState.refresh is LoadState.Loading && movies.itemCount == 0) {
+            ShowProgressIndicator()
         }
     }
 }

@@ -15,5 +15,6 @@ fun MovieEntity.toDomain(): Movie {
         mediaType = mediaType,
         rating = rating,
         name = "",
+        isBookmarked = isBookmarked
     )
 }

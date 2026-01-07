@@ -2,7 +2,6 @@ package com.cinevault.data.remote
 
 import com.cinevault.data.remote.dto.MovieDetailsDto
 import com.cinevault.data.remote.dto.MovieResponseDto
-import kotlinx.coroutines.flow.Flow
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -12,7 +11,8 @@ interface TmdbApi {
     // for trending movies
     @GET(value = "trending/movie/{time_window}")
     suspend fun getTrendingMovies(
-        @Path("time_window") timeWindow: String
+        @Path("time_window") timeWindow: String,
+        @Query(value = "page") page: Int = 1
     ): MovieResponseDto
 
     // for now playing movies
