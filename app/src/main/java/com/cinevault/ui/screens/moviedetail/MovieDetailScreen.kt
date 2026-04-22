@@ -39,6 +39,7 @@ import com.cinevault.domain.model.MovieDetails
 import com.cinevault.ui.screens.ShowErrorMessage
 import com.cinevault.ui.screens.ShowProgressIndicator
 import com.cinevault.utils.Helpers
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -144,7 +145,7 @@ fun MovieContent(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        val ratingText = String.format("%.1f", movie.voteAverage)
+        val ratingText = String.format(Locale.ROOT, "%.1f", movie.voteAverage)
         Text(
             text = "Rating ⭐: $ratingText",
             style = MaterialTheme.typography.bodyMedium

@@ -42,6 +42,7 @@ import com.cinevault.ui.screens.ShowErrorMessage
 import com.cinevault.ui.screens.ShowProgressIndicator
 import com.cinevault.utils.AppLogger
 import com.cinevault.utils.Helpers
+import java.util.Locale
 
 
 @Composable
@@ -159,7 +160,7 @@ fun BookmarkItem(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = String.format("%.1f", movie.rating),
+                        text = String.format(Locale.ROOT, "%.1f", movie.rating),
                         style = MaterialTheme.typography.bodySmall
                     )
                 }

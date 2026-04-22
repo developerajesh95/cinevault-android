@@ -46,6 +46,7 @@ import coil.compose.AsyncImage
 import com.cinevault.R
 import com.cinevault.core.constant.ApiConstants
 import com.cinevault.domain.model.Movie
+import java.util.Locale
 
 @Composable
 fun MovieItem(
@@ -90,7 +91,7 @@ fun MovieItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "⭐ ${String.format("%.1f", movie.rating)}",
+                    text = "⭐ ${String.format(Locale.ROOT, "%.1f", movie.rating)}",
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
                 )
