@@ -19,6 +19,7 @@ android {
     defaultConfig {
         applicationId = "com.cinevault"
         minSdk = 26
+        //noinspection OldTargetApi
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -46,6 +47,7 @@ android {
         compose = true
     }
 
+    @Suppress("UnstableApiUsage")
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.14"
     }
@@ -94,6 +96,7 @@ dependencies {
     // room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
+    //noinspection KaptUsageInsteadOfKsp
     kapt(libs.room.compiler)
 
     // coroutines
