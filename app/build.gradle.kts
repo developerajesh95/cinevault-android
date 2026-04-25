@@ -1,16 +1,14 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.dagger.hilt)
 }
 
 android {
     namespace = "com.cinevault"
-    compileSdk {
-        version = release(36)
-    }
+    //noinspection GradleDependency
+    compileSdk = 36
 
     lint {
         baseline = file("lint-baseline.xml")
@@ -40,18 +38,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
+
     buildFeatures {
         compose = true
     }
-
-    @Suppress("UnstableApiUsage")
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
-    }
-
 }
 
 dependencies {
@@ -83,7 +73,7 @@ dependencies {
 
     // hilt
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.android.compiler)
 
     implementation(libs.androidx.hilt.navigation.compose)
 
@@ -96,8 +86,7 @@ dependencies {
     // room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
-    //noinspection KaptUsageInsteadOfKsp
-    kapt(libs.room.compiler)
+    ksp(libs.room.compiler)
 
     // coroutines
     implementation(libs.coroutines.core)
@@ -113,7 +102,4 @@ dependencies {
     implementation(libs.paging.runtime)
     implementation(libs.paging.compose)
     implementation(libs.paging.room)
-
-
-
 }
